@@ -3,10 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <title>Ruffle</title>
-            <link rel="shortcut icon" href="#" type="image/x-icon">
-			<script src="https://unpkg.com/@ruffle-rs/ruffle"></script>
+    <link rel="shortcut icon" href="#" type="image/x-icon">
+    <script src="https://unpkg.com/@ruffle-rs/ruffle"></script>
     <style>
-        /* MINIMO ESSENZIALE: definizioni CSS generali per il contenitore */
         body {
             font-family: Arial, sans-serif;
             margin: 0;
@@ -16,35 +15,115 @@
             align-items: center;
             min-height: 100vh;
         }
-
         #main-wrapper {
-            width: 700px; /* Larghezza Fissa */
+            width: 700px;
             padding: 20px;
             background-color: white;
             border: 1px solid #ccc;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         }
-
-        /* (Qui andranno gli stili per mimare i tuoi mock-up) */
-
+        #file-input {
+            margin-bottom: 20px;
+            padding: 10px;
+            border: 2px dashed #ccc;
+            border-radius: 4px;
+            width: 100%;
+            box-sizing: border-box;
+            cursor: pointer;
+        }
+        #file-input:hover {
+            border-color: #999;
+        }
+        h2 {
+            margin-top: 0;
+            color: #333;
+        }
+        #container {
+            position: relative;
+            min-height: 450px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #f9f9f9;
+            border-radius: 4px;
+        }
+        #placeholder {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            opacity: 0.3;
+        }
+        #placeholder.hidden {
+            display: none;
+        }
+        #placeholder svg {
+            width: 120px;
+            height: 120px;
+        }
+        #placeholder p {
+            margin: 0;
+            color: #666;
+            font-size: 14px;
+        }
     </style>
 </head>
 <body>
-  <div id="container"></div>
+    <div id="main-wrapper">
+        <h2>Carica un file SWF</h2>
+        <input type="file" id="file-input" accept=".swf" />
+        <div id="container">
+            <div id="placeholder">
+                <svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+                    <rect fill="#FF0000" width="512" height="512" rx="15%"/>
+                    <path fill="#FFF" d="M253 147l-98 98h70v120h56V245h70zm130 230H129c-17 0-30-13-30-30V165c0-17 13-30 30-30h71v30h-71v212h254V165h-71v-30h71c17 0 30 13 30 30v182c0 17-13 30-30 30z"/>
+                </svg>
+                <p>Seleziona un file SWF per iniziare</p>
+            </div>
+        </div>
+    </div>
 </body>
-<!---script for player--->
- <script type="text/javascript">
-        window.RufflePlayer = window.RufflePlayer || {};
-        window.addEventListener("load", (event) => {
-            const ruffle = window.RufflePlayer.newest();
-            const player = ruffle.createPlayer();
-            const container = document.getElementById("container"); 
+
+<script type="text/javascript">
+    window.RufflePlayer = window.RufflePlayer || {};
+    
+    window.addEventListener("load", (event) => {
+        const ruffle = window.RufflePlayer.newest();
+        let player = null;
+        const container = document.getElementById("container");
+        const fileInput = document.getElementById("file-input");
+        
+        fileInput.addEventListener("change", async (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+            
+            // Nascondi placeholder
+            const placeholder = document.getElementById("placeholder");
+            placeholder.classList.add("hidden");
+            
+            // Rimuovi player precedente se esiste
+            if (player) {
+                const oldPlayer = container.querySelector("ruffle-player");
+                if (oldPlayer) oldPlayer.remove();
+            }
+            
+            // Crea nuovo player
+            player = ruffle.createPlayer();
             container.appendChild(player);
+            
+            // Leggi il file come ArrayBuffer
+            const arrayBuffer = await file.arrayBuffer();
+            
+            // Carica nel player
             player.load({
-                url: "mig29.swf", 
-                backgroundColor: "#000", 
-             });
-            player.style.width = "450px"; 
+                data: arrayBuffer,
+                backgroundColor: "#000",
+            });
+            
+            player.style.width = "450px";
             player.style.height = "450px";
         });
-    </script>
+    });
+</script>
 </html>
