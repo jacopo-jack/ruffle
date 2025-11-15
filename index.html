@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <title>Ruffle</title>
+            <link rel="shortcut icon" href="#" type="image/x-icon">
+			<script src="https://unpkg.com/@ruffle-rs/ruffle"></script>
+    <style>
+        /* MINIMO ESSENZIALE: definizioni CSS generali per il contenitore */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            background-color: #eee;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        #main-wrapper {
+            width: 700px; /* Larghezza Fissa */
+            padding: 20px;
+            background-color: white;
+            border: 1px solid #ccc;
+        }
+
+        /* (Qui andranno gli stili per mimare i tuoi mock-up) */
+
+    </style>
+</head>
+<body>
+  <div id="container"></div>
+</body>
+<!---script for player--->
+ <script type="text/javascript">
+        window.RufflePlayer = window.RufflePlayer || {};
+        window.addEventListener("load", (event) => {
+            const ruffle = window.RufflePlayer.newest();
+            const player = ruffle.createPlayer();
+            const container = document.getElementById("container"); 
+            container.appendChild(player);
+            player.load({
+                url: "mig29.swf", 
+                backgroundColor: "#000", 
+             });
+            player.style.width = "450px"; 
+            player.style.height = "450px";
+        });
+    </script>
+</html>
